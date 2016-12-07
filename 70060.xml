@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no" ?>
+<system fileversion="1113" name="CBOSSin" schemaversion="3.0.0.1">
+
+  <point name="MDTranslator1" pointcode="70060">
+    <template name="TemplateRoot">
+      <templatesettings/>
+      <workers>
+        <worker name="Root" parent=""/>
+      </workers>
+      <settings metaref="Root"/>
+      <template name="TraceSystemTemplate">
+        <templatesettings>
+          <param name="templateprogid" type="string" value="VAS_TraceSystem.TraceSystemTemplate"/>
+          <param name="workerprogid" type="string" value="VAS_TraceSystem.TraceSystemWorker"/>
+        </templatesettings>
+        <workers>
+          <worker name="TraceSystem" parent="/Root"/>
+        </workers>
+        <settings metaref="TraceSystem">
+          <param elementtype="composite" name="Files" type="vector">
+            <element>
+              <param name="Filename" type="string" value="./ztrace/second_phaze_70060"/>
+              <param name="Format" type="string" value="Binary"/>
+              <param name="RotateSize" type="integer" value="10485760"/>
+              <param name="AutoFlush" type="boolean" value="true"/>
+              <param elementtype="composite" name="Rules" type="vector">
+                <element>
+                  <param elementtype="composite" name="Filter" type="vector">
+                    <element>
+                      <param name="ConditionType" type="string" value="SeverityLevel"/>
+                      <param name="MinSeverity" type="integer" value="4"/>
+                    </element>
+                  </param>
+                  <param name="Action" type="composite">
+                    <param name="ActionType" type="string" value="ToLog"/>
+                  </param>
+                </element>
+              </param>
+            </element>
+          </param>
+        </settings>
+      </template>
+      <template name="TemplateMTP">
+        <templatesettings>
+          <param name="workerclsid" type="uuid" value="6F660BA5-35EF-41A6-A142-8BC6B3CB03F8"/>
+        </templatesettings>
+        <workers>
+          <worker name="MTP" parent="/Root"/>
+        </workers>
+        <settings metaref="VAS_MTPCore">
+          <param name="userparts" type="composite">
+            <param name="IDAJE2W" type="composite">
+              <param name="ServiceInd" type="integer" value="3"/>
+              <param name="Locator" type="string" value="/Root/SCCP"/>
+            </param>
+          </param>
+          <param name="routes" type="composite">
+            <param name="1" type="composite">
+              <param name="DPC" type="integer" value="100"/>
+              <param name="NetwInd" type="integer" value="2"/>
+              <param name="LinksetName" type="string" value="SMFact"/>
+              <param name="Prty" type="integer" value="1"/>
+              <param name="Share" type="integer" value="2"/>
+            </param>
+            <param name="2" type="composite">
+              <param name="DPC" type="integer" value="200"/>
+              <param name="NetwInd" type="integer" value="2"/>
+              <param name="LinksetName" type="string" value="SMFstb"/>
+              <param name="Prty" type="integer" value="2"/>
+              <param name="Share" type="integer" value="2"/>
+            </param>
+          </param>
+          <param name="linksets" type="composite">
+            <param name="SMFact" type="composite">
+              <param name="LinksetLocator" type="string" value="/Root/Linkset_SMF_Active"/>
+              <param name="LocalPC" type="integer" value="70060"/>
+              <param name="NetwInd" type="integer" value="2"/>
+            </param>
+            <param name="SMFstb" type="composite">
+              <param name="LinksetLocator" type="string" value="/Root/Linkset_SMF_Standby"/>
+              <param name="LocalPC" type="integer" value="70060"/>
+              <param name="NetwInd" type="integer" value="2"/>
+            </param>
+          </param>
+        </settings>
+      </template>
+      <template name="TCPLinkset_SMF_Active">
+        <templatesettings>
+          <param name="workerclsid" type="uuid" value="C721B0B4-0F3B-4FE7-AFA0-AE7C9FE94D0F"/>
+        </templatesettings>
+        <workers>
+          <worker name="Linkset_SMF_Active" parent="/Root"/>
+        </workers>
+        <settings metaref="VAS_TCPLinkset">
+          <param name="IsTCPServer" type="boolean" value="false"/>
+          <param name="TCPPort" type="string" value="31104"/>
+          <param name="TCPAddress" type="string" value="10.12.1.104"/>
+          <param name="LocalPC" type="integer" value="70060"/>
+          <param name="AdjPC" type="integer" value="100"/>
+          <param name="NetwInd" type="integer" value="2"/>
+        </settings>
+      </template>
+      <template name="TCPLinkset_SMF_Standby">
+        <templatesettings>
+          <param name="workerclsid" type="uuid" value="C721B0B4-0F3B-4FE7-AFA0-AE7C9FE94D0F"/>
+        </templatesettings>
+        <workers>
+          <worker name="Linkset_SMF_Standby" parent="/Root"/>
+        </workers>
+        <settings metaref="VAS_TCPLinkset">
+          <param name="IsTCPServer" type="boolean" value="false"/>
+          <param name="TCPPort" type="string" value="32104"/>
+          <param name="TCPAddress" type="string" value="10.12.1.128"/>
+          <param name="LocalPC" type="integer" value="70060"/>
+          <param name="AdjPC" type="integer" value="200"/>
+          <param name="NetwInd" type="integer" value="2"/>
+        </settings>
+      </template>
+      <template name="TemplateSCCP">
+        <templatesettings>
+          <param name="templateclsid" type="uuid" value="E2F0A45D-DF82-4BDB-B346-B5B088574FFC"/>
+          <param name="workerclsid" type="uuid" value="DD3B501C-850A-44EE-B2C0-9DF9305FEC09"/>
+        </templatesettings>
+        <workers>
+          <worker name="SCCP" parent="/Root"/>
+        </workers>
+        <settings metaref="SCCP">
+          <param elementtype="composite" name="NetworkTable" type="vector">
+            <element>
+              <param name="PC" type="integer" value="70060"/>
+              <param name="NI" type="integer" value="2"/>
+            </element>
+          </param>
+          <param elementtype="composite" name="EncodingTable" type="vector"/>
+          <param elementtype="composite" name="RoutingTable" type="vector">
+            <element>
+              <param name="Input" type="composite">
+                <param name="RI" type="integer" value="0"/>
+                <param name="AIF" type="string" value="SMF"/>
+                <param name="SSN" type="integer" value="91"/>
+                <param name="TON" type="integer" value="4"/>
+                <param name="NPI" type="integer" value="3"/>
+              </param>
+              <param name="Output" type="composite">
+                <param name="RI" type="integer" value="1"/>
+                <param name="PC" type="integer" value="100"/>
+                <param name="SSN" type="integer" value="91"/>
+              </param>
+              <param name="Rules" type="composite"/>
+            </element>
+            <element>
+              <param name="Input" type="composite">
+                <param name="RI" type="integer" value="0"/>
+                <param name="AIF" type="string" value="SMF"/>
+                <param name="SSN" type="integer" value="91"/>
+                <param name="TON" type="integer" value="4"/>
+                <param name="NPI" type="integer" value="3"/>
+              </param>
+              <param name="Output" type="composite">
+                <param name="RI" type="integer" value="1"/>
+                <param name="PC" type="integer" value="200"/>
+                <param name="SSN" type="integer" value="91"/>
+              </param>
+              <param name="Rules" type="composite"/>
+            </element>
+          </param>
+          <param elementtype="composite" name="ManagementTable" type="vector"/>
+          <param elementtype="composite" name="DefaultStatusesTable" type="vector">
+            <element>
+              <param name="Status" type="integer" value="-1"/>
+              <param name="Address" type="composite">
+                <param name="PC" type="integer" value="100"/>
+                <param name="SSN" type="integer" value="2345"/>
+              </param>
+            </element>
+            <element>
+              <param name="Status" type="integer" value="-1"/>
+              <param name="Address" type="composite">
+                <param name="PC" type="integer" value="200"/>
+                <param name="SSN" type="integer" value="2345"/>
+              </param>
+            </element>
+          </param>
+        </settings>
+      </template>
+      <template name="TemplateTCAP">
+        <templatesettings>
+          <param name="templateclsid" type="uuid" value="E3D26B59-89B4-4FD5-8292-389D5A90420C"/>
+          <param name="workerclsid" type="uuid" value="FFFCF741-1AB1-4CC5-8630-BD5A9975BAC6"/>
+        </templatesettings>
+        <workers>
+          <worker name="TCAP" parent="/Root"/>
+        </workers>
+        <settings metaref="TCAP"/>
+      </template>
+      <template name="TemplateINAP">
+        <templatesettings>
+          <param name="templateclsid" type="uuid" value="BCB0893F-2384-4A07-A3E1-BD05C16D76B4"/>
+          <param name="workerclsid" type="uuid" value="53510FEF-ECFA-46DA-AF03-36004BBF002D"/>
+        </templatesettings>
+        <workers>
+          <worker name="INAP" parent="/Root"/>
+        </workers>
+        <settings metaref="INAP"/>
+      </template>
+      <template name="RemoteMessaging">
+        <templatesettings>
+          <param name="templateclsid" type="uuid" value="20153D22-8245-4661-9CFB-ED67CB1DCF67"/>
+          <param name="workerclsid" type="uuid" value="EC492FD5-E623-464F-9F70-2A91A78BBCAC"/>
+        </templatesettings>
+        <workers>
+          <worker name="RemoteMessaging" parent="/Root"/>
+        </workers>
+        <settings metaref="RemoteMessaging">
+          <param name="MESSAGING_SSN" type="integer" value="1234"/>
+          <param name="GT_MESSAGING_SSN" type="integer" value="2345"/>
+        </settings>
+      </template>
+      <template name="SMFAgent">
+        <templatesettings>
+          <param name="templateclsid" type="uuid" value="A5FCB8FE-ECD3-4EDD-913D-01DADAB19F6E"/>
+          <param name="workerclsid" type="uuid" value="381690A3-5368-44CD-9239-D2856FE2443F"/>
+        </templatesettings>
+        <workers>
+          <worker name="SMFAgent" parent="/Root"/>
+        </workers>
+        <settings metaref="SMFAgent">
+          <param name="LocalAddress" type="composite">
+            <param name="RI" type="integer" value="1"/>
+            <param name="PC" type="integer" value="70060"/>
+            <param name="SSN" type="integer" value="90"/>
+          </param>
+          <param name="send_config" type="boolean" value="false"/>
+        </settings>
+      </template>
+      <template name="ScalableRaterGate">
+        <templatesettings>
+          <param name="workerclsid" type="uuid" value="90A0454C-DFC9-40D8-8B70-270BA4BFB2C5"/>
+        </templatesettings>
+        <workers>
+          <worker name="ScalableRaterGate" parent="/Root"/>
+        </workers>
+        <settings metaref="ScalableRaterGate">
+          <param name="CBOSS_DllName" type="string" value="mdmodule.dll"/>
+          <param name="DllName" type="string" value="asap_gate.dll"/>
+          <param name="Addresses" type="composite"/>
+          <param name="CBOSS_Settings" type="composite">
+            <param name="SchemaName" type="string" value="POSTPAID"/>
+            <param name="ScriptName" type="string" value="script/cmb.bc"/>
+            <param name="SpecialParam" type="string" value="script/parameter.txt"/>
+            <param name="BackupFolder" type="string" value="backup"/>
+            <param name="DiscardFolder" type="string" value="discard"/>
+            <param name="HotBillingFolder" type="string" value="rtb/HotBilling"/>
+            <param name="HotBillingLogLevel" type="integer" value="1"/>
+            <param name="StopOnErrors" type="boolean" value="false"/>
+            <param name="FilenameFromCDR" type="boolean" value="false"/>
+            <param elementtype="composite" name="Input" type="vector">
+              <element>
+                <param name="FormatNumber" type="integer" value="1"/>
+                <param name="SwitchName" type="string" value="243"/>
+                <param name="SourceFolder" type="string" value="input_switch"/>
+                <param name="IgnoreFile" type="string" value="^(?!r_MSNH)+(\w*\W*)*$"/>
+                <param name="AddPrefix" type="boolean" value="false"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+              </element>
+              <element>
+                <param name="FormatNumber" type="integer" value="5"/>
+                <param name="SwitchName" type="string" value="243"/>
+                <param name="SourceFolder" type="string" value="input_CRBT"/>
+                <param name="IgnoreFile" type="string" value=".*input_switch(/|\\){1,1}?((CRBT|crbt){1,1}?)"/>
+                <param name="AddPrefix" type="boolean" value="false"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+              </element>
+              <element>
+                <param name="FormatNumber" type="integer" value="2"/>
+                <param name="SwitchName" type="string" value=""/>
+                <param name="SourceFolder" type="string" value="input_DISCARD"/>
+                <param name="IgnoreFile" type="string" value=".*input_switch(/|\\){1,1}?((CALLS_DISCARD|calls_discard){1,1}?)"/>
+                <param name="AddPrefix" type="boolean" value="false"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+              </element>
+              <element>
+                <param name="FormatNumber" type="integer" value="4"/>
+                <param name="SwitchName" type="string" value=""/>
+                <param name="SourceFolder" type="string" value="input_tests"/>
+                <param name="IgnoreFile" type="string" value=".*(\.tmp)"/>
+                <param name="AddPrefix" type="boolean" value="false"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+              </element>
+              <element>
+                <param name="FormatNumber" type="integer" value="3"/>
+                <param name="SwitchName" type="string" value="263"/>
+                <param name="SourceFolder" type="string" value="input_sgsn"/>
+                <param name="IgnoreFile" type="string" value="^(?!r_GPRS)+(\w*\W*)*$"/>
+                <param name="AddPrefix" type="boolean" value="false"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+              </element>
+            </param>
+            <param elementtype="composite" name="Output" type="vector">
+              <element>
+                <param name="OutputName" type="string" value="default"/>
+                <param name="OutputFolder" type="string" value="for_POST_loader"/>
+                <param name="OutputFileExtension" type="string" value="out"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+                <param name="ConvertCCFtoHotBilling" type="boolean" value="false"/>
+              </element>
+              <element>
+                <param name="OutputName" type="string" value="test_cdrs"/>
+                <param name="OutputFolder" type="string" value="for_test_cdrs"/>
+                <param name="OutputFileExtension" type="string" value="out"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+                <param name="ConvertCCFtoHotBilling" type="boolean" value="false"/>
+              </element>
+              <element>
+                <param name="OutputName" type="string" value="discard"/>
+                <param name="OutputFolder" type="string" value="for_POST_loader"/>
+                <param name="OutputFileExtension" type="string" value="out"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+                <param name="ConvertCCFtoHotBilling" type="boolean" value="false"/>
+              </element>
+              <element>
+                <param name="OutputName" type="string" value="for_nrtrde"/>
+                <param name="OutputFolder" type="string" value="for_nrtrde"/>
+                <param name="OutputFileExtension" type="string" value="out"/>
+                <param name="SpecialOutputID" type="string" value=""/>
+                <param name="ConvertCCFtoHotBilling" type="boolean" value="false"/>
+              </element>
+            </param>
+          </param>
+        </settings>
+      </template>
+    </template>
+  </point>
+
+</system>
