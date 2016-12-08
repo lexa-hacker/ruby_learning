@@ -1,0 +1,11 @@
+TemplateRoot
+TraceSystemTemplate
+TemplateMTP
+TCPLinkset_SMF_Active
+TCPLinkset_SMF_Standby
+TemplateSCCP
+TemplateTCAP
+TemplateINAP
+RemoteMessaging
+SMFAgent
+ScalableRaterGate

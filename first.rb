@@ -1,18 +1,21 @@
-file_name_read = ARGV[0]
-file_name_write = ARGV[1]
+file_read_name = ARGV[0]
+file_write_name = ARGV[1]
 
-f_read = File.new(file_name_read)
-f_write = File.new(file_name_write, "w")
+file_read = File.new(file_read_name)
+file_write = File.new(file_write_name, "w")
 
-while str=f_read.gets
-  unless str["</"] || str["/>"] || str["<?"] || str.chomp.empty?
-    if ind = str.index("name")
-      str = str[ind+6,str.length-1]
-      str = str[0,str.index("\"")]
-      f_write.puts(str)
+while str = file_read.gets
+  if str["template "]
+    arr = str.split("\"")
+    i=0
+    while i < arr.length
+      if arr[i]["name"]
+        file_write.puts arr[i+1]
+      end
+      i+=1
     end
   end
 end
 
-f_read.close
-f_write.close
+file_read.close
+file_write.close
