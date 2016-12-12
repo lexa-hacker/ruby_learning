@@ -1,63 +1,75 @@
-#create table usrs (login varchar(20), password varchar(20));
-#insert into usrs (login, password) values('user1', 'pass1');
-#insert into usrs (login, password) values('user2', 'pass2');
-#insert into usrs (login, password) values('user3', 'pass3');
 require 'PG'
 
-method = ARGV[0] #create/update/delete/find
-usr_login = ARGV[1]
-usr_pwd = ARGV[2]
+class ORM
 
-def connection
-	PG.connect( :dbname=>'testdb', :user=>'testusr', :password=>'postgre') 
+  def initialize(db_name, db_usr, db_pass)
+    @connect = PG.connect( :dbname=>db_name, :user=>db_usr, :password=>db_pass) 
+  end
+
+  attr_reader :connect
+
+  def create(tbl, data)
+    i=0
+    fields = ""
+    values = ""
+    data.each do |key, value|
+      i += 1
+      fields += key
+      if value.class == String
+        values += "'" + value + "'"
+      else
+        values += value.to_s
+      end
+      if i < data.length
+        fields += "," 
+        values += ","
+      end
+    end
+    makeDML("INSERT INTO #{tbl} (#{fields}) values (#{values});").cmd_tuples.to_s + " records were created"
+  end
+
+  def update(tbl, data, cond)
+    updateble = make_attr_str(data)
+    conditions = make_attr_str(cond)
+    makeDML("UPDATE #{tbl} SET #{updateble} WHERE #{conditions};").cmd_tuples.to_s + " records were changed"
+  end
+
+  def delete(tbl, cond)
+    conditions = make_attr_str(cond)
+    makeDML("DELETE FROM #{tbl} WHERE #{conditions};").cmd_tuples.to_s + " records were deleted"
+  end
+
+  def find(tbl, cond)
+    conditions = make_attr_str(cond)
+    result = makeDML("SELECT * FROM #{tbl} WHERE #{conditions};")
+    if result.ntuples > 0
+      result.each do |row|
+        return row
+      end
+    end
+    result.ntuples.to_s + " records were selected"
+  end
+
+  private
+    def makeDML(executionString)
+      @connect.exec(executionString)
+    end
+
+    def make_attr_str(hash)
+      i = 0
+      result = ""
+      hash.each do |key, value|
+        i += 1
+        result += key + "="
+        if value.class == String
+          result += "'" + value + "'"
+        else
+          result += value.to_s
+        end
+        if i < hash.length
+          result += " and "
+        end
+      end
+      result
+    end
 end
-
-class User
-	def initialize(attributes)
-		@login = attributes[:login]
-		@password = attributes[:password]
-	end
-
-	attr_accessor :login, :password
-end
-
-def makeDML(executionString)
-	connection.exec(executionString)
-end
-
-def createUsr(login, pass)
-	usr = User.new({:login=>login, :password=>pass})
-	makeDML("INSERT INTO usrs (login, password) values ('#{usr.login}', '#{usr.password}');")
-	return usr
-end
-
-def updateUsr(login, pass)
-	usr = User.new({:login=>login, :password=>pass})
-	makeDML("UPDATE usrs SET password='#{usr.password}' WHERE login='#{usr.login}';")
-	return usr
-end
-
-def deleteUsr(login, pass=nil)
-	usr = User.new({:login=>login, :password=>pass})
-	makeDML("DELETE FROM usrs WHERE login='#{usr.login}';")
-	return usr
-end
-
-def findUsr(login, pass=nil)
-	makeDML("SELECT * FROM usrs WHERE login='#{login}';").each do |row|
-		return User.new({:login=>row["login"].rstrip, :password=>row["password"].rstrip})
- 	end
-end
-
-user = 	case method
-	when "create"
-		createUsr(usr_login, usr_pwd)
-	when "update"
-		updateUsr(usr_login, usr_pwd)
-	when "delete"
-		deleteUsr(usr_login)
-	when "find"
-		findUsr(usr_login)
-	end
-
-p user
