@@ -9,19 +9,19 @@ class ORM
   attr_reader :connect
 
   def create(table_name, data)
-    make_DML("INSERT INTO #{table_name} (#{data.keys.join(",")}) values (#{data.values.collect{|x| x.class==String ? "'"+x+"'" : x}.join(",")});").cmd_tuples.to_s + " records were created"
+    make_dml("INSERT INTO #{table_name} (#{data.keys.join(",")}) values (#{data.values.collect{|x| x.class==String ? "'"+x+"'" : x}.join(",")});").cmd_tuples.to_s + " records were created"
   end
 
   def update(table_name, data, cond)
-    make_DML("UPDATE #{table_name} SET #{make_attr_str(data)} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were changed"
+    make_dml("UPDATE #{table_name} SET #{make_attr_str(data)} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were changed"
   end
 
   def delete(table_name, cond)
-    make_DML("DELETE FROM #{table_name} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were deleted"
+    make_dml("DELETE FROM #{table_name} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were deleted"
   end
 
   def find(table_name, cond)
-    result = make_DML("SELECT * FROM #{table_name} WHERE #{make_attr_str(cond)};")
+    result = make_dml("SELECT * FROM #{table_name} WHERE #{make_attr_str(cond)};")
     if result.ntuples > 0
       arr = []
       result.each {|row| arr.push(row)}
@@ -31,7 +31,7 @@ class ORM
   end
 
   private
-    def make_DML(execution_string)
+    def make_dml(execution_string)
       @connect.exec(execution_string)
     end
 
