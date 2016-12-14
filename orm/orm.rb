@@ -3,25 +3,25 @@ require 'PG'
 class ORM
 
   def initialize(db_name, db_usr, db_pass)
-    @connect = PG.connect( :dbname=>db_name, :user=>db_usr, :password=>db_pass) 
+    @connect = PG.connect( dbname: db_name, user: db_usr, password: db_pass) 
   end
 
   attr_reader :connect
 
-  def create(tbl, data)
-    make_DML("INSERT INTO #{tbl} (#{data.keys.join(",")}) values (#{data.values.collect{|x| x.class==String ? "'"+x+"'" : x}.join(",")});").cmd_tuples.to_s + " records were created"
+  def create(table_name, data)
+    make_DML("INSERT INTO #{table_name} (#{data.keys.join(",")}) values (#{data.values.collect{|x| x.class==String ? "'"+x+"'" : x}.join(",")});").cmd_tuples.to_s + " records were created"
   end
 
-  def update(tbl, data, cond)
-    make_DML("UPDATE #{tbl} SET #{make_attr_str(data)} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were changed"
+  def update(table_name, data, cond)
+    make_DML("UPDATE #{table_name} SET #{make_attr_str(data)} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were changed"
   end
 
-  def delete(tbl, cond)
-    make_DML("DELETE FROM #{tbl} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were deleted"
+  def delete(table_name, cond)
+    make_DML("DELETE FROM #{table_name} WHERE #{make_attr_str(cond)};").cmd_tuples.to_s + " records were deleted"
   end
 
-  def find(tbl, cond)
-    result = make_DML("SELECT * FROM #{tbl} WHERE #{make_attr_str(cond)};")
+  def find(table_name, cond)
+    result = make_DML("SELECT * FROM #{table_name} WHERE #{make_attr_str(cond)};")
     if result.ntuples > 0
       arr = []
       result.each {|row| arr.push(row)}
