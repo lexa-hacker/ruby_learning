@@ -1,6 +1,6 @@
 require 'PG'
 
-class ORM
+class Orm
 
   def initialize(db_name, db_usr, db_pass)
     @connect = PG.connect( dbname: db_name, user: db_usr, password: db_pass) 
@@ -21,7 +21,11 @@ class ORM
   end
 
   def find(table_name, cond)
-    result = make_dml("SELECT * FROM #{table_name} WHERE #{make_attr_str(cond)};")
+    if cond.empty?
+      result = make_dml("SELECT * FROM #{table_name};")
+    else
+      result = make_dml("SELECT * FROM #{table_name} WHERE #{make_attr_str(cond)};")
+    end
     if result.ntuples > 0
       arr = []
       result.each {|row| arr.push(row)}

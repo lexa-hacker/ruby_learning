@@ -2,7 +2,7 @@
 
 require_relative 'orm'
 
-tst_db = ORM.new('testdb','testusr','postgre')#db,usr,pwd
+tst_db = Orm.new('testdb','testusr','postgre')#db,usr,pwd
 
 #create/find
 p tst_db.create('usrs', {'login'=>'tst_usr', 'password'=>'tst_pwd'})
