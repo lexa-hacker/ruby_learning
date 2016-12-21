@@ -1,24 +1,13 @@
-require 'mechanize'
-require_relative 'show'
-require_relative 'db_exec'
+require_relative 'commonMethods'
 
-class Weather
+class Weather < Common
   def initialize
     @parameters = get_weather
+    @table_name = "weather"
+    @table_fields = ["temperature","wind","humidity","pressure","comment"]
   end
 
   attr_reader :parameters
-
-  include Show
-  include Db_exec
-
-  def show
-    show_elt @parameters
-  end
-  
-  def save_to_db(db)
-    insert_to_db(db, "weather", {"temperature"=>@parameters[0], "wind"=>@parameters[1], "humidity"=>@parameters[2], "pressure"=>@parameters[3], "comment"=>@parameters[4]})
-  end
 
   private
     def get_weather
@@ -32,7 +21,7 @@ class Weather
           humidity = elt.text if elt.text.include? "Влажность"
           pressure = elt.text if elt.text.include? "Давление"
         end
-        return [temperature, wind, humidity, pressure, comment]
+        return [[temperature, wind, humidity, pressure, comment]]
       end
     end
 end

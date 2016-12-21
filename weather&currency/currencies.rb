@@ -1,28 +1,13 @@
-require 'mechanize'
-require_relative 'show'
-require_relative 'db_exec'
+require_relative 'commonMethods'
 
-class Currencies
+class Currencies < Common
   def initialize
     @parameters = get_currencies
+    @table_name = "currencies"
+    @table_fields = ["currency", "exchange", "on_date"]
   end
   
   attr_reader :parameters
-
-  include Show
-  include Db_exec
-
-  def show
-    @parameters.each do |element|
-      show_elt element
-    end
-  end
-
-  def save_to_db(db)
-    @parameters.each do |element|
-      insert_to_db(db, "currencies", {"currency"=>element[0], "exchange"=>element[1], "on_date"=>element[2]})
-    end
-  end
 
   private
     def get_currencies
