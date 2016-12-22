@@ -1,12 +1,7 @@
-require_relative '../orm/orm'
 require_relative 'weather'
-require_relative 'currencies'
+require_relative 'currency'
 
 class Interactive
-
-  def initialize
-    @db = Orm.new('testdb','testusr','postgre')
-  end
 
   def interactive
     puts "Use the following commands: weather, currencies, exit."
@@ -15,20 +10,20 @@ class Interactive
     when "weather"
       wez = Weather.new
       wez.show
-      wez.save_to_db(@db)
+      wez.save_to_db
     when "currencies"
-      cur = Currencies.new
+      cur = Currency.new
       cur.show
-      cur.save_to_db(@db)
+      cur.save_to_db
     when "exit"
       dump = File.open("dump.txt", "w")
       unless cur.nil?
-        cur.select_from_db(@db).each do |element|
+        cur.select_from_db.each do |element|
           dump.puts element.values.join("  ")
         end
       end
       unless wez.nil?
-        wez.select_from_db(@db).each do |element|
+        wez.select_from_db.each do |element|
           dump.puts element.values.join("  ")
         end
       end
@@ -39,3 +34,5 @@ class Interactive
     interactive
   end
 end
+
+Interactive.new.interactive

@@ -1,9 +1,8 @@
-require_relative 'commonMethods'
+require_relative 'common_methods'
 
-class Weather < Common
+class Weather < CommonMethods
   def initialize
     @parameters = get_weather
-    @table_name = "weather"
     @table_fields = ["temperature","wind","humidity","pressure","comment"]
   end
 

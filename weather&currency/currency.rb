@@ -1,9 +1,8 @@
-require_relative 'commonMethods'
+require_relative 'common_methods'
 
-class Currencies < Common
+class Currency < CommonMethods
   def initialize
     @parameters = get_currencies
-    @table_name = "currencies"
     @table_fields = ["currency", "exchange", "on_date"]
   end
   
