@@ -3,10 +3,6 @@ require_relative 'orm'
 
 class CommonMethods < Orm
 
-  def select_from_db
-    self.class.find({})
-  end
-
   def show
     @parameters.each do |element|
       puts element
@@ -16,11 +12,17 @@ class CommonMethods < Orm
 
   def save_to_db
     @parameters.each do |element|
-      hash = {}
+      data = {}
       @table_fields.each do |key|
-        hash[key] = element[@table_fields.index(key)]
+        data[key] = element[@table_fields.index(key)]
       end
-      self.class.create(hash)
+      self.class.create(data)
+    end
+  end
+
+  def save_to_file file
+    self.class.find({}).each do |element|
+      file.puts element.values.join("  ")
     end
   end
 

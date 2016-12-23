@@ -4,35 +4,34 @@ require_relative 'currency'
 class Interactive
 
   def interactive
-    puts "Use the following commands: weather, currencies, exit."
+    puts "Use the following commands: weather, currency, exit."
     command = gets.chomp
-    case command
-    when "weather"
-      wez = Weather.new
-      wez.show
-      wez.save_to_db
-    when "currencies"
-      cur = Currency.new
-      cur.show
-      cur.save_to_db
-    when "exit"
+    if command == "weather"
+      weather = Weather.new
+      command_execution weather
+    elsif command == "currency"
+      currency = Currency.new
+      command_execution currency
+    elsif command == "exit"
       dump = File.open("dump.txt", "w")
-      unless cur.nil?
-        cur.select_from_db.each do |element|
-          dump.puts element.values.join("  ")
-        end
+      unless currency.nil?
+        currency.save_to_file(dump)
       end
-      unless wez.nil?
-        wez.select_from_db.each do |element|
-          dump.puts element.values.join("  ")
-        end
+      unless weather.nil?
+        weather.save_to_file(dump)
       end
       return
     else
-      puts "vse hernya, davai po novoi"
+      puts "Wrong command, try again!"
     end
     interactive
   end
+
+  def command_execution obj
+    obj.show
+    obj.save_to_db
+  end
+
 end
 
 Interactive.new.interactive

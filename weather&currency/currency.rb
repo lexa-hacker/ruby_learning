@@ -12,14 +12,14 @@ class Currency < CommonMethods
     def get_currencies
       currencies = Mechanize.new
       currencies.get('http://www.alpari.ru/ru/analytics/currency/') do |page|
-        cur_list = []
+        currency_list = []
         page.search('.currency__informer').each do |element|
           name = "Валюта: " + element.search('.currency__informer-header').text
           value = "Стоимость: " + element.search('.currency__informer-value-main').text
           date = "На дату: " + element.search('.currency__informer-value-date').text
-          cur_list.push([name, value, date])
+          currency_list.push([name, value, date])
         end
-        return cur_list
+        return currency_list
       end
     end
 end
